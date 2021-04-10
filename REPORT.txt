@@ -1,0 +1,14 @@
+- Describe how you keep track of open file offsets
+
+- Explain why it's a good idea to copy the exec args in kernel space
+  before performing the exec
+
+- List 3 security exposures that your implementation of exec addressed
+
+- Read about the opendir system call. Why do we need a dedicated system
+  call for opening directories? Why not just open a directory as if it
+  were a file and look at its internal representation?
+
+- We implement the open, close, read, and write system calls. All
+  Unix-like systems have corresponding higher level library
+  functions: fopen, fclose, fread, and fwrite. How come?
