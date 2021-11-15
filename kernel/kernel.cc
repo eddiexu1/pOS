@@ -9,7 +9,7 @@
 Shared<Node> checkFile(const char* name, Shared<Node> node) {
     CHECK(node != nullptr);
     CHECK(node->is_file());
-    Debug::printf("*** file %s is ok\n",name);
+    // Debug::printf("*** file %s is ok\n",name);
     return node;
 }
 
@@ -18,10 +18,10 @@ Shared<Node> getFile(Shared<Ext2> fs, Shared<Node> node, const char* name) {
 }
 
 Shared<Node> checkDir(const char* name, Shared<Node> node) {
-    Debug::printf("*** checking %s\n",name);
+    // Debug::printf("*** checking %s\n",name);
     CHECK (node != nullptr);
     CHECK (node->is_dir());
-    Debug::printf("*** directory %s is ok\n",name);
+    // Debug::printf("*** directory %s is ok\n",name);
     return node;
 }
 
@@ -31,17 +31,17 @@ Shared<Node> getDir(Shared<Ext2> fs, Shared<Node> node, const char* name) {
 
 void kernelMain(void) {
     auto d = Shared<Ide>::make(1);
-    Debug::printf("*** mounting drive 1\n");
+    // Debug::printf("*** mounting drive 1\n");
     auto fs = Shared<Ext2>::make(d);
     auto root = checkDir("/",fs->root);
     auto sbin = getDir(fs,root,"sbin");
     auto init = getFile(fs,sbin,"init");
 
-    Debug::printf("*** loading init\n");
+    // Debug::printf("*** loading init\n");
     uint32_t e = ELF::load(init);
-    Debug::printf("*** entry %x\n",e);
+    // Debug::printf("*** entry %x\n",e);
     auto userEsp = K::min(kConfig.ioAPIC,kConfig.localAPIC);
-    Debug::printf("*** user esp %x\n",userEsp);
+    // Debug::printf("*** user esp %x\n",userEsp);
     // Current state:
     //     - %eip points somewhere in the middle of kernelMain
     //     - %cs contains kernelCS (CPL = 0)
