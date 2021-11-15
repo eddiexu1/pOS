@@ -1,5 +1,20 @@
 #include "libc.h"
 
+/**
+ * PURPOSE:
+ *  - Tests nested fork calls (fork() in children)
+ *  - Tests simultaneous open and close calls in children
+ *  - Tests file sharing semantics in children (closing a file in children does not close file in parent)
+ *  - Tests waiting on children
+ *  - Tests reading open files and writing to console
+ * 
+ * ASSUMPTIONS:
+ *  - Parent and children share pointers to open files but have separate arrays
+ *  - open() assigns next available fd
+ *  - fd 0, 1, 2 are already open (console devices)
+ *  - all other sys calls implemented correctly
+**/
+
 void one(int fd) {
     printf("*** fd = %d\n",fd);
     printf("*** len = %d\n",len(fd));
