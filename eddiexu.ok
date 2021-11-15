@@ -1,5 +1,7 @@
 *** fd = 3
 *** len = 43
+*** this is nice
+*** we can read and write
 *** in child
 *** in child of child
 *** argc = 4
