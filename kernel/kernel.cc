@@ -5,6 +5,9 @@
 #include "machine.h"
 #include "libk.h"
 #include "config.h"
+#include "kernel.h"
+
+Shared<Ext2> fs; // global file system for sys calls
 
 Shared<Node> checkFile(const char* name, Shared<Node> node) {
     CHECK(node != nullptr);
@@ -32,7 +35,7 @@ Shared<Node> getDir(Shared<Ext2> fs, Shared<Node> node, const char* name) {
 void kernelMain(void) {
     auto d = Shared<Ide>::make(1);
     // Debug::printf("*** mounting drive 1\n");
-    auto fs = Shared<Ext2>::make(d);
+    fs = Shared<Ext2>::make(d);
     auto root = checkDir("/",fs->root);
     auto sbin = getDir(fs,root,"sbin");
     auto init = getFile(fs,sbin,"init");
@@ -57,6 +60,15 @@ void kernelMain(void) {
     // User mode will never "return" from switchToUser. It will
     // enter the kernel through interrupts, exceptions, and system
     // calls.
+    userEsp -= 0x1000;
+    *((uint32_t*)userEsp) = 1;
+    *(((uint32_t*)userEsp) + 1) = (uint32_t)(((uint32_t*)userEsp) + 2);
+    *(((uint32_t*)userEsp) + 2) = (uint32_t)(((uint32_t*)userEsp) + 3);
+    *(((char*)userEsp) + 12) = 'i';
+    *(((char*)userEsp) + 13) = 'n';
+    *(((char*)userEsp) + 14) = 'i';
+    *(((char*)userEsp) + 15) = 't';
+    *(((char*)userEsp) + 16) = 0;
     switchToUser(e,userEsp,0);
     Debug::panic("*** implement switchToUser in machine.S\n");
 }

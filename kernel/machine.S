@@ -203,13 +203,14 @@ getCR3:
 	# switchToUser(pc,esp,eax)
         .global switchToUser
 switchToUser:
-        mov 4(%esp), %eax
+        mov 4(%esp), %ebx
         mov 8(%esp), %ecx
+        mov 12(%esp), %eax
         push userSS
         push %ecx
         pushf
         push userCS
-        push %eax
+        push %ebx
         iret
 
 

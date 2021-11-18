@@ -7,7 +7,7 @@
 #include "shared.h"
 #include "threads.h"
 #include "vmm.h"
-
+#include "pcb.h"
 
 
 namespace gheith {
@@ -62,7 +62,8 @@ namespace gheith {
     TCB::TCB(bool isIdle) : isIdle(isIdle), id(next_id.fetch_add(1)) {
         saveArea.tcb = this;
         pd = make_pd();
-
+        parent = nullptr;
+        pcb = new PCB();
         saveArea.cr3 = (uint32_t) pd;
     }
 

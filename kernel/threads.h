@@ -10,6 +10,8 @@
 #include "vmm.h"
 #include "tss.h"
 
+class PCB;
+
 namespace gheith {
 
     constexpr static int STACK_BYTES = 8 * 1024;
@@ -36,10 +38,16 @@ namespace gheith {
         const uint32_t id;
 
         // queue stuff
+        TCB* parent;
+
+        PCB* pcb;
+
+        uint32_t pid;
+
         TCB* next;
 
         SaveArea saveArea;
-
+ 
         uint32_t* pd;
 
         TCB(bool isIdle);

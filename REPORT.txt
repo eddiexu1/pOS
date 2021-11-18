@@ -1,14 +1,28 @@
 - Describe how you keep track of open file offsets
+Open file offsets are tracked through the structure OpenFile, which also holds a reference to the file. When the user 
+calls read, the kernel looks at the OpenFile structure to determine where to start.
 
 - Explain why it's a good idea to copy the exec args in kernel space
   before performing the exec
+We copy the exec args, so the data isn't overwritten when we load in the new ELF file.
 
 - List 3 security exposures that your implementation of exec addressed
+I checked that the ELF file actually exists. I checked that the entry point given by ELF file is in user space. 
+I checked that the argument list is null terminated.
 
 - Read about the opendir system call. Why do we need a dedicated system
   call for opening directories? Why not just open a directory as if it
   were a file and look at its internal representation?
+The X bit for a directory signifies that it can access the inodes of the files in its entries.
+Therefore, if we open a file that is a directory with our regular open with read permissions and no
+execute permissions to look at its internal represnetation, we could access the files using its inodes, 
+which we do not have permission to do so. TLDR; permission semantics are different between files and directories.
+
+
 
 - We implement the open, close, read, and write system calls. All
   Unix-like systems have corresponding higher level library
   functions: fopen, fclose, fread, and fwrite. How come?
+The higher level library functions are abstractions of the lower level system call, and provide
+more functionality such as returning a file pointer, allowing for buffering, use of stdio functions, etc.
+These functions are also more portable than the lower level calls.

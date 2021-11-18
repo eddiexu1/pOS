@@ -33,9 +33,9 @@ void Debug::printf(const char* fmt, ...) {
 }
 
 void Debug::shutdown() {
-    if (checks.get() > 0) {
-        printf("*** passed %d checkes\n",checks.get());
-    }
+    // if (checks.get() > 0) {
+    //     printf("*** passed %d checkes\n",checks.get());
+    // }
     printf("core %d requested shutdown\n",SMP::me());
     shutdown_called = true;
     while (true) {

@@ -10,3 +10,6 @@ start:
 loop:
 	call exit
 	jmp loop
+
+.extern printf_init
+call printf_init

@@ -16,7 +16,7 @@ namespace gheith {
 
     uint32_t* shared = nullptr;
 
-    void map(uint32_t* pd, uint32_t va, uint32_t pa) {
+    void map(uint32_t* pd, uint32_t va, uint32_t pa, bool user=false) {
         auto pdi = va >> 22;
         auto pti = (va >> 12) & 0x3FF;
         auto pde = pd[pdi];
@@ -26,6 +26,7 @@ namespace gheith {
         }
         auto pt = (uint32_t*) (pde & 0xFFFFF000);
         pt[pti] = pa | 7;
+        if (!user) pt[pti] &= ~(1UL << 2);
     }
 
     void unmap(uint32_t* pd, uint32_t va) {
@@ -96,13 +97,12 @@ extern "C" void vmm_pageFault(uintptr_t va_, uintptr_t *saveState) {
     ASSERT((uint32_t)me->pd == getCR3());
     ASSERT(me->saveArea.cr3 == getCR3());
 
-    
-
     uint32_t va = PhysMem::framedown(va_);
 
-    if (va >= 0x80000000) {
+    if (va >= 0x80000000 && va != kConfig.localAPIC && va != kConfig.ioAPIC) {
+        // Debug::printf("%x\n", va);
         auto pa = PhysMem::alloc_frame();
-        map(me->pd,va,pa);
+        map(me->pd,va,pa,true);
         return;
     }
 
